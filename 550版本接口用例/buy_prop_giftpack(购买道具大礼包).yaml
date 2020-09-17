@@ -1,0 +1,124 @@
+# 接口信息
+api_info:
+    name: 5.5.0-购买大礼包
+    # 变更记录
+    change_log:
+      - 5.5.0版本新增
+    # 标签
+    tags:
+      - 5.5.0
+    # 请求信息
+    request:
+      method: post
+      path: /index.php?m=Api&c=PropGiftpack&a=buy_prop_giftpack
+      headers:
+        mauthorization: app_key:install_token:TEST
+        versioncode: ios_5.5.0
+        content-type: application/x-www-form-urlencoded
+      data:
+        prop_giftpack_id: 道具馆大礼包ID——必须项
+
+    # 响应信息
+    response:
+      status: string——必须项——ok返回正确，error返回错误
+      message:
+        key: integer——必须项——错误代码CODE
+        messgae: string——必须项——错误描述
+      data:
+        asset: object——必须——用户资产结构
+          cloth_ticket:	integer——必须——旧版服装券数量
+          coins: integer——必须——金币数
+          coupon_count: integer——必须——新版服装券数量
+          gems: integer——必须——钻石数		 	
+
+	
+# 测试用例集
+testcases:
+    - case_id: 1
+      case_name: 购买大礼包-不带必填参数prop_giftpack_id
+      data:
+        prop_giftpack_id: null
+      expect:
+          - status: error
+
+    - case_id: 2
+      case_name: 购买大礼包-必填参数prop_giftpack_id为空
+      data:
+        prop_giftpack_id: ''
+      expect:
+          - status: error
+
+    - case_id: 3
+      case_name: 购买大礼包-必填参数prop_giftpack_id不存在
+      data:
+        prop_giftpack_id: 9999999
+      expect:
+          - status: error
+
+    - case_id: 4
+      case_name: 购买大礼包-必填参数prop_giftpack_id为负数
+      data:
+        prop_giftpack_id: -1
+      expect:
+          - status: error
+
+
+     - case_id: 5
+       case_name: 购买大礼包-必填参数prop_giftpack_id类型错误
+       data:
+        prop_giftpack_id: "699"
+      expect:
+          - status: error
+          
+    - case_id: 6
+      case_name: 金币余额充足时购买金币大礼包
+      data:
+        prop_giftpack_id: 699
+      expect:
+          - status: ok
+
+    - case_id: 7
+      case_name: 购买下架状态的大礼包
+      data:
+        prop_giftpack_id: 
+      expect:
+          - status: 
+
+    - case_id: 8
+      case_name: 金币余额不足时购买金币大礼包
+      data:
+        prop_giftpack_id: 699
+      expect:
+          - status: error
+
+    - case_id: 9
+      case_name: 蓝钻余额不足时购买蓝钻大礼包
+      data:
+        prop_giftpack_id: 699
+      expect:
+          - status: error
+
+    - case_id: 10
+      case_name: 蓝钻+金钻余额不足时购买蓝钻大礼包
+      data:
+        prop_giftpack_id: 699
+      expect:
+          - status: error
+
+    - case_id: 11
+      case_name: 蓝钻+金钻余额充足，金钻抵扣开关未打开时购买蓝钻大礼包
+      data:
+        prop_giftpack_id: 699
+      expect:
+          - status: error
+
+    - case_id: 12
+      case_name: 蓝钻+金钻余额充足，金钻抵扣开关已打开时购买蓝钻大礼包
+      data:
+        prop_giftpack_id: 699
+      expect:
+          - status: OK
+
+
+
+    

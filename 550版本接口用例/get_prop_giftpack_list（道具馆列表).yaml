@@ -1,0 +1,158 @@
+# 接口信息
+api_info:
+    name: 5.5.0-获取道具馆大礼包列表
+    # 变更记录
+    change_log:
+      - 5.5.0版本新增
+    # 标签
+    tags:
+      - 5.5.0
+    # 请求信息
+    request:
+      method: get
+      path: /index.php?m=Api&c=PropGiftpack&a=get_prop_giftpack_list
+      headers:
+        mauthorization: app_key:install_token:TEST
+        versioncode: ios_5.5.0
+        content-type: application/x-www-form-urlencoded
+      params:
+        page: 页码——必须项
+        pagesize: 每页个数——必须项
+    # 响应信息
+    response:
+      status: string——必须项——ok返回正确，error返回错误
+      message:
+        key: integer——必须项——错误代码CODE
+        messgae: string——必须项——错误描述
+      data:
+        asset: object——必须项——用户资产结构
+          cloth_ticket: integer——必须——旧版服装券数量
+          coins: integer——必须——金币数
+          coupon_count: integer——必须——新版服装券数量
+          gems:	integer——必须——钻石数
+        list: object []——必须——item 类型:object
+          has_buy: integer——必须——是否已购买
+          has_new: integer——必须——是否NEW标签，@1为是，@0为否
+          price: integer——必须——价格
+          price_type:	integer——必须——价格类型
+          prop_giftpack_id: integer——必须——道具馆大礼包id
+          title: string——必须——标题
+          title_image: string——必须——缩略图	
+	
+# 测试用例集
+testcases:
+    - case_id: 1
+      case_name: 获取道具馆大礼包列表失败-不带必填参数page
+      params:
+        page: null
+        pagesize: 30
+      expect:
+          - status: error
+
+    - case_id: 2
+      case_name: 获取道具馆大礼包列表失败-page为空
+      params:
+        page: ''
+        pagesize: 30
+      expect:
+          - status: error
+
+    - case_id: 3
+      case_name: 获取道具馆大礼包列表失败-page不存在
+      params:
+        page: -1
+        pagesize: 30
+      expect:
+          - status: error
+
+     - case_id: 4
+      case_name: 获取道具馆大礼包列表失败-page参数类型不正确
+      params:
+        page: "20"
+        pagesize: 20
+      expect:
+          - status: error
+          
+    - case_id: 5
+      case_name: 获取道具馆大礼包列表失败-不带必填参数pagesize
+      params:
+        page: 1
+        pagesize: null
+      expect:
+        - status: error
+
+    - case_id: 6
+      case_name: 获取道具馆大礼包列表失败-pagesize为空
+      params:
+        page: 1
+        pagesize: ''
+      expect:
+        - status: error
+
+    - case_id: 7
+      case_name: 获取道具馆大礼包列表失败-pagesize超目前总数据量
+      params:
+        page: 1
+        pagesize: 100000
+      expect:
+        - status: ok (返回当前所有上架大礼包数据)
+
+    - case_id: 8
+      case_name: 获取道具馆大礼包列表失败-pagesize参数类型不正确
+      params:
+        page: 1
+        pagesize: "20"
+      expect:
+        - status: error
+    
+    - case_id: 9
+      case_name: 各参数正确，获取道具馆大礼包列表成功
+      params:
+        page: 1
+        pagesize: 30
+      expect:
+        - status: ok
+
+    - case_id: 10
+      case_name: 后台上架新大礼包素材
+      params:
+        page: 1
+        pagesize: 30
+      expect:
+        - has_new: 1
+        - giftpack_id: 返回新上架的大礼包id
+
+    - case_id: 11
+        case_name: 后台修改礼包的价格为20，货币类型为金币，price和price_type实时更新
+        params:
+          page: 1
+          pagesize: 30
+        expect:
+          - price: 20
+          - price_type: 0
+            
+     - case_id: 12
+        case_name: 后台下架正在展示的大礼包
+        params:
+          page: 1
+          pagesize: 30
+        expect:
+          - giftpack_id: 已下架的大礼包不返回
+      
+      - case_id: 13
+        case_name: 后台定时上架大礼包
+        params:
+          page: 1
+          pagesize: 30
+        expect:
+          - giftpack_id: 未到所定时间点不返回，到时间是返回上架大礼包id
+      
+      - case_id: 14
+        case_name: 后台定时下架大礼包
+        params:
+          page: 1
+          pagesize: 30
+        expect:
+          - giftpack_id: 未到所定时间点返回，到时间是不返回定时下架大礼包id
+      
+            

@@ -1,0 +1,170 @@
+# 接口信息
+api_info:
+    name: 5.5.0-获取道具馆大礼包详情
+    # 变更记录
+    change_log:
+      - 5.5.0版本新增
+    # 标签
+    tags:
+      - 5.5.0
+    # 请求信息
+    request:
+      method: get
+      path: /index.php?m=Api&c=PropGiftpack&a=get_prop_giftpack_list
+      headers:
+        mauthorization: app_key:install_token:TEST
+        versioncode: ios_5.5.0
+        content-type: application/x-www-form-urlencoded
+      params:
+        prop_giftpack_id: 道具馆大礼包ID——必须项
+
+    # 响应信息
+    response:
+      status: string——必须项——ok返回正确，error返回错误
+      message:
+        key: integer——必须项——错误代码CODE
+        messgae: string——必须项——错误描述
+      data:
+        asset: object——必须——用户资产结构
+          coins: integer——必须——金币数量
+          coupon_count: integer——必须——新版服装券数量
+          gems: integer——必须——钻石数
+        prop_info: object——必须——道具馆列表信息	
+          has_buy: integer——必须——是否已购买
+          list: object []——必须——item类型:object
+            block_size: integer——必须——背景使用，1:通用，2：小画布，3：大画布	
+            category_id: integer——必须——分类ID
+            cloud_columns_id:	integer——必须——栏目ID
+            count: integer——必须——素材数量
+            item_id: integer——必须——关联ID
+            name: string——必须——素材包名称
+            package_id:	integer——必须——素材包ID
+            res_list:	object []——必须——item类型:object
+              block_size: integer——必须——背景、场景使用，1:通用，2：小画布，3：大画布，4为全景
+              code: string——必须——素材code
+              name: string——必须——素材名称
+              res_id:	integer——必须——素材ID
+              resatom_list: object []——必须——item类型:object
+                bound_x: integer——必须——宽
+                bound_y: integer——必须——高
+                code: string——必须——素材原子code
+                data: string——必须——素材数据
+                default_x: integer——必须——偏移量X
+                default_y: integer——必须——偏移量Y
+                filename:	string——必须——素材原子缩略图
+                fps: integer——必须——每秒帧数
+                frames:	integer——必须——帧数
+                s_animated: integer——必须——是否动画素材，1为是，0为否
+                limit: integer——必须——对话框字数限制
+                name:	string——必须——素材原子名称
+                resatom_id:	integer——必须——素材原子列表
+                resman_category_id: integer——必须——旧版素材分类ID
+                resman_res_id: integer——必须——旧版素材ID												
+              resatom_num: integer——必须——素材原子数量
+              tag: string——必须——标签
+              thumbnail: string——必须——素材缩略图						
+            resatom_count: integer——必须——素材原子数量
+            sp_type: integer——必须——文字大类时使用，1：对话，2：旁白：3其他，默认为0
+            title_image: string——必须——素材包缩略图
+            type: integer——必须——素材包类型，1为基础包，2为普通包
+            writer_image:	string——必须——作者头像
+            writer_name: string——必须——作者名称						
+          price: integer——必须——价格
+          price_type: integer——必须——价格类型
+          prop_giftpack_id: integer——必须——道具馆大礼包id
+          prop_giftpack_title: string——必须——道具馆大礼包名称			 	
+
+	
+# 测试用例集
+testcases:
+    - case_id: 1
+      case_name: 获取道具馆大礼包详情失败-不带必填参数prop_giftpack_id
+      params:
+        prop_giftpack_id: null
+      expect:
+          - status: error
+
+    - case_id: 2
+      case_name: 获取道具馆大礼包详情失败-必填参数prop_giftpack_id为空
+      params:
+        prop_giftpack_id: ''
+      expect:
+          - status: error
+
+    - case_id: 3
+      case_name: 获取道具馆大礼包详情失败-必填参数prop_giftpack_id不存在
+      params:
+        prop_giftpack_id: 99999999
+      expect:
+          - status: error
+
+    - case_id: 4
+      case_name: 获取道具馆大礼包详情失败-必填参数prop_giftpack_id为负数
+      params:
+        prop_giftpack_id: -1
+      expect:
+          - status: error
+
+
+     - case_id: 5
+       case_name: 获取道具馆大礼包详情失败-必填参数prop_giftpack_id类型错误
+      params:
+        prop_giftpack_id: "699"
+      expect:
+          - status: error
+          
+    - case_id: 6
+      case_name: 获取道具馆大礼包详情成功
+      params:
+        prop_giftpack_id: 699
+      expect:
+          - status: ok
+
+    - case_id: 7
+      case_name: 后台修改礼包的价格为20，货币类型为金币，price和price_type实时更新
+      params:
+        prop_giftpack_id: 699
+      expect:
+          - price：20
+          - price_type：0
+
+     - case_id: 8
+      case_name: 后台修改礼包的价格为20，货币类型为金币，price和price_type实时更新
+      params:
+        prop_giftpack_id: 699
+      expect:
+          - price：20
+          - price_type：0
+    
+      - case_id: 9
+        case_name: 后台下架大礼包内的大包
+        params:
+          prop_giftpack_id: 699
+        expect:
+            -package_id：已下架的大包不返回
+
+      - case_id: 10
+        case_name: 后台下架大包中的素材
+        params:
+          prop_giftpack_id: 699
+        expect:
+            -res_id：已下架的素材不返回
+
+      - case_id: 11
+        case_name: 后台在大包中上架素材
+        params:
+          prop_giftpack_id: 699
+        expect:
+            -resatom_num：增加相应素材数量
+      
+      - case_id: 12
+        case_name: 后台在大礼包中上架大包
+        params:
+          prop_giftpack_id: 699
+        expect:
+            -count：增加相应大包数量
+            
+
+      
+
+    

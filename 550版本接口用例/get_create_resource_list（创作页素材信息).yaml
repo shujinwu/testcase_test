@@ -1,0 +1,154 @@
+# 接口信息
+api_info:
+    name: 5.5.0-创作页素材信息
+    # 变更记录
+    change_log:
+      - 5.5.0版本新增prop_shop_has_news
+    # 标签
+    tags:
+      - 5.5.0
+    # 请求信息
+    request:
+      method: get
+      path: /index.php?m=Api&c=ComicCreate&a=get_create_resource_list
+      headers:
+        mauthorization: app_key:install_token:TEST
+        versioncode: ios_5.5.0
+        content-type: application/x-www-form-urlencoded
+      data:
+        
+
+    # 响应信息
+    response:
+      status: string——必须项——ok返回正确，error返回错误
+      message:
+        key: integer——必须项——错误代码CODE
+        messgae: string——必须项——错误描述
+      data:
+        chuman_shop_url:	string——必须——封面铺子URL	
+        cloud_package_buy_all_info:	object——必须——素材商店一键购买信息，没有的为null	
+          img_url:	string——必须—— 图片	
+          remaining_time:	integer——必须——剩余秒数	
+          cloud_package_buy_all_status:	integer——必须——素材商店一键购买状态，0，不显示，1显示	
+          cloudpackage_shop_has_new: integer——必须——是否有新标签，0：没有，1：有	
+          prop_shop_has_news:	integer——必须——道具馆是否有新素材new标签，0，没有new标签；1，有new标签（5.5.0新增类型）	
+        reserve_list: object []——必须——预约素材结构如果没有预约,结构为nullitem 类型:object
+          category_id: integer——必须——分类ID	
+          discount_cost: integer——必须——折扣价格	
+          original_cost:	integer——必须——原价	
+          package_id:	integer——必须——包ID	
+          package_name:	string——必须——包名称	
+          price_type:	string——必须——价格类型，1.钻石;2.金币	
+          reserve_id:	integer——必须——预约ID	
+          reserve_img:	string——必须——预定图片	
+          reserve_status:	integer——必须——预约状态：0；没预定，1：已预定	
+          shop_type: integer——必须——商店类型，1,美型商店，2，素材商店	
+          thumbnail:	string——必须——缩略图	
+          time_desc: string——必须——活动时间描述，预约状态为没预约显示，	
+          time_limit:	integer——必须——活动倒计时，预约状态为已预约显示	
+        spdiy_buy_all_info:	object——必须——美型一键购买信息，没有的为null	
+          img_url:	string——必须——图片	
+          remaining_time:	integer——必须——剩余秒数	
+        spdiy_buy_all_status:	integer——必须——美型商店一键购买状态，0，不显示，1显示	
+        spdiy_package_list:	object []——必须——美型商城列表	item 类型:object
+          category_id: integer——必须——分类ID	
+          discount:	number——必须——折扣	
+          discount_cost:	integer——必须——折扣价格	
+          discount_type:	integer——必须——折扣类型，0无折扣；1.限时折扣；2，限时免费	
+          first_class_id: integer——必须——第一类目ID（5.0.0新增字段）	
+          has_buy: integer——必须——是否购买，0，没有购买；1，已购买	
+          has_new: integer——必须——是否有new标签，0，没有new标签；1，有new标签	
+          has_vip_price: integer——必须是否有会员折扣:0:没有，1：有	
+          invite_tag: string——非必须——角标	
+          is_vip:	integer——必须——是否会员专属:0:没有，1：有	
+          original_cost:	integer——必须——原价	
+          package_id: integer——必须——包ID	
+          package_name:	string——必须——包名称	
+          price_type:	string——必须——价格类型，1.钻石;2.金币	
+          recommend_id:	integer——必须——推荐ID	
+          res_count:	integer——必须——素材数量	
+          shop_type:	integer——必须——商店类型，1美型商店，2素材商店，3道具馆（5.5.0新增类型）	
+          sp_type:	integer——必须——特殊类型列表，1，推荐，2，礼包，3，上新（5.0.0新增字段）	
+          thumbnail:	string——必须——缩略图	
+          type:	integer——必须——类型，1为普通，2为集合包，3为大礼包	
+          vip_price:	integer——必须-会员价	
+        spdiy_shop_has_news:	integer——必须——美型商店是否有新素材new标签，0，没有new标签；1，有new标签
+            
+# 测试用例集
+testcases:
+    - case_id: 1
+      case_name: 后台没有配置素材一键购
+      expect:
+        -cloud_package_buy_all_status: 0
+
+    - case_id: 2
+      case_name: 后台有配置素材一键购
+      expect:
+        -cloud_package_buy_all_status: 1
+
+    - case_id: 3
+      case_name: 后台有配置素材一键购且为上新素材
+      expect:
+        - cloudpackage_shop_has_new: 1   
+      
+    - case_id: 4
+      case_name: 后台有配置素材一键购不为上新素材
+      expect:
+        - cloudpackage_shop_has_new: 0 
+
+    - case_id: 5
+      case_name: 后台没有配置美型商店一键购
+      expect:
+        - spdiy_buy_all_status: 0
+
+    - case_id: 6
+      case_name: 后台有配置美型商店一键购
+      expect:
+        -spdiy_buy_all_status: 1
+
+    - case_id: 7
+      case_name: 后台有配置素材一键购且为上新素材
+      expect:
+        - spdiy_shop_has_news: 1   
+      
+    - case_id: 8
+      case_name: 后台有配置素材一键购不为上新素材
+      expect:
+        - spdiy_shop_has_news: 0 
+
+    - case_id: 9
+      case_name: 后台没有配置提前购素材
+      expect:
+        - reserve_list: null
+    
+    - case_id: 10
+      case_name: 后台有配置提前购素材，设置折扣价格discount_cost为0.8，原价original_cost=100，价格类型金钻price_type=1
+      expect:
+        - discount_cost: 0.8
+        - original_cost: 100
+        - price_type: 1
+
+    - case_id: 11
+      case_name: 后台有配置美型商店一键购
+      expect:
+        -spdiy_buy_all_status: 1
+
+    - case_id: 12
+      case_name: 后台有配置素材一键购且为上新素材
+      expect:
+        - cloudpackage_shop_has_new: 1   
+      
+    - case_id: 13
+      case_name: 后台有配置素材一键购不为上新素材
+      expect:
+        - cloudpackage_shop_has_new: 0 
+
+    - case_id: 14
+      case_name: 道具馆上架新大礼包素材
+      expect:
+          - prop_shop_has_news: 1
+
+    - case_id: 15
+      case_name: 道具馆上架新大礼包素材超12个小时
+      expect:
+          - prop_shop_has_news: 0
